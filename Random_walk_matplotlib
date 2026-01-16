@@ -1,0 +1,23 @@
+import matplotlib.pyplot as plt
+from die import Die
+
+die = Die()
+
+results = []
+for roll_num in range(1000):
+    result = die.roll()
+    results.append(result)
+
+frequencies = []
+for value in range(1, die.num_sides+1):
+    frequency = results.count(value)
+    frequencies.append(frequency)
+plt.style.use('tableau-colorblind10')
+fix, ax = plt.subplots()
+x_values = list(range(1, die.num_sides+1))
+bar_labels = ['red', 'blue', '_red', 'orange', '_red',  'blue']
+bar_colors = ['tab:red', 'tab:blue', 'tab:red', 'tab:orange', 'tab:red', 'tab:blue']
+ax.bar(x_values, frequencies, label=bar_labels, color=bar_colors)
+
+
+plt.show()
