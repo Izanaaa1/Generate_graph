@@ -1,0 +1,61 @@
+import csv
+from datetime import datetime
+import matplotlib.pyplot as plt
+
+
+filename = 'sitka_weather_2018_simple.csv'
+filename2 = 'death_valley_2018_simple.csv'
+with open(filename) as f:
+    reader = csv.reader(f)
+    header_row = next(reader)
+
+    dates, highs, lows = [], [], []
+    for row in reader:
+        low = int(row[6])
+        current_date = datetime.strptime(row[2], "%Y-%m-%d")
+        high = int(row[5])
+        dates.append(current_date)
+        highs.append(high)
+        lows.append(low)
+    with open(filename2) as f2:
+        reader2 = csv.reader(f2)
+        header_row2 = next(reader2)
+
+        highs2, lows2  = [], []
+        
+        for row2 in reader2:
+            try:
+                low2 = int(row2[5])
+                high2 = int(row2[4])
+                
+            except ValueError:
+                print("Пустая строка")
+            
+            else:
+                highs2.append(high2)
+                lows2.append(low2)
+                
+
+all_high = highs2 + highs
+all_low = lows + lows2
+y_max = max(all_high) + 5
+y_min = min(all_low) - 5
+# нанечение данных на диаграмму
+plt.style.use('tableau-colorblind10')
+fig, ax = plt.subplots()
+ax.plot(dates, highs, c='blue', alpha=0.5)
+ax.plot(dates, highs2, c='red', alpha=0.5)
+ax.plot(dates, lows, c='blue', alpha=0.3)
+ax.plot(dates, lows2, c='red', alpha=0.3)
+plt.title("Самая высокая температура в Ситке и Долине Смерти", fontsize=24)
+plt.xlabel('', fontsize=16)
+fig.autofmt_xdate()
+plt.ylabel("Температура (F)", fontsize=16)
+plt.fill_between(dates, highs, lows, facecolor='blue', alpha=0.1)
+plt.fill_between(dates, highs2, lows2, facecolor='red', alpha=0.1)
+
+plt.ylim(y_min, y_max)
+
+plt.tick_params(axis='both', which='major', labelsize=16)
+plt.grid()
+plt.show()
